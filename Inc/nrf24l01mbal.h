@@ -2,7 +2,7 @@
  * nrf24l01mbal.h
  *
  *  Created on: 16.05.2019
- *      Author: bialema4
+ *      Author: mbal
  */
 
 #ifndef NRF24L01MBAL_H_
@@ -234,37 +234,52 @@ typedef enum _TM_NRF24L01_OutputPower_t {
 } TM_NRF24L01_OutputPower_t;
 
 
-typedef struct {
-	uint16_t      CE_pin;
-	GPIO_TypeDef* CE_port;
-	uint16_t      CSN_pin;
-	GPIO_TypeDef* CSN_port;
-	SPI_HandleTypeDef*  SPI; //SPI_TypeDef
-} NRF24L01_ports_TypeDef;
+/**
+ * @brief  NRF24L01 SPI CE and CSN port definition
+ */
+//typedef struct {
+//	uint16_t      CE_pin;
+//	GPIO_TypeDef* CE_port;
+//	uint16_t      CSN_pin;
+//	GPIO_TypeDef* CSN_port;
+//	SPI_HandleTypeDef*  SPI; //SPI_TypeDef
+//} NRF24L01_ports_TypeDef;
 
+/**
+ * @brief  NRF24L01 configuration record
+ */
 typedef struct {
-	uint8_t RX_TX; //1-RX, 0-TX
-	uint8_t rx_address[ 5 ];
-	uint8_t tx_address[ 5 ];
-	uint8_t radio_channel;
-	uint8_t baud_rate;
-	uint8_t payload_len;
-	uint8_t crc_len;
+	uint16_t                  CE_pin;
+	GPIO_TypeDef*             CE_port;
+	uint16_t                  CSN_pin;
+	GPIO_TypeDef*             CSN_port;
+	SPI_HandleTypeDef*        SPI;
+
+	uint8_t                   rx_address[ 5 ];
+	uint8_t                   tx_address[ 5 ];
+	uint8_t                   radio_channel;
+	TM_NRF24L01_DataRate_t    baud_rate;
+	uint8_t                   payload_len;
+	uint8_t                   crc_len;
+	TM_NRF24L01_OutputPower_t output_power;
 } NRF24L01_config_TypeDef;
 
-uint8_t mbal_NRF24L01_Init( NRF24L01_ports_TypeDef*, NRF24L01_config_TypeDef* );
-void mbal_NRF24L01_Transmit( NRF24L01_ports_TypeDef*, NRF24L01_config_TypeDef*, uint8_t* );
-void mbal_NRF24L01_GetData( NRF24L01_ports_TypeDef*, NRF24L01_config_TypeDef*, uint8_t* );
-uint8_t mbal_NRF24L01_DataReady( NRF24L01_ports_TypeDef* );
-uint8_t mbal_NRF24L01_RxFifoEmpty( NRF24L01_ports_TypeDef* );
-uint8_t mbal_NRF24L01_GetStatus( NRF24L01_ports_TypeDef* );
-TM_NRF24L01_Transmit_Status_t mbal_NRF24L01_GetTransmissionStatus( NRF24L01_ports_TypeDef* );
-void mbal_NRF24L01_SoftwareReset( NRF24L01_ports_TypeDef* );
-uint8_t mbal_NRF24L01_GetRetransmissionsCount( NRF24L01_ports_TypeDef* );
-void mbal_NRF24L01_SetChannel( NRF24L01_ports_TypeDef*, uint8_t );
-void mbal_NRF24L01_SetRF( NRF24L01_ports_TypeDef*, TM_NRF24L01_DataRate_t, TM_NRF24L01_OutputPower_t );
-void mbal_NRF24L01_Clear_Interrupts( NRF24L01_ports_TypeDef* );
+/**
+ * @brief  Public function definition
+ */
+uint8_t mbal_NRF24L01_Init( NRF24L01_config_TypeDef* );
+void mbal_NRF24L01_Transmit( NRF24L01_config_TypeDef*, uint8_t* );
+void mbal_NRF24L01_GetData( NRF24L01_config_TypeDef*, uint8_t* );
+uint8_t mbal_NRF24L01_DataReady( NRF24L01_config_TypeDef* );
+uint8_t mbal_NRF24L01_RxFifoEmpty( NRF24L01_config_TypeDef* );
+uint8_t mbal_NRF24L01_GetStatus( NRF24L01_config_TypeDef* );
+TM_NRF24L01_Transmit_Status_t mbal_NRF24L01_GetTransmissionStatus( NRF24L01_config_TypeDef* );
+void mbal_NRF24L01_SoftwareReset( NRF24L01_config_TypeDef* );
+uint8_t mbal_NRF24L01_GetRetransmissionsCount( NRF24L01_config_TypeDef* );
+void mbal_NRF24L01_SetChannel( NRF24L01_config_TypeDef* );
+void mbal_NRF24L01_SetRF( NRF24L01_config_TypeDef* );
+void mbal_NRF24L01_Clear_Interrupts( NRF24L01_config_TypeDef* );
 
-void mbal_NRF24L01_ReadConfig( NRF24L01_ports_TypeDef *nrf_ports, uint8_t* result );
+void mbal_NRF24L01_ReadConfig( NRF24L01_config_TypeDef*, uint8_t* );
 
 #endif /* NRF24L01MBAL_H_ */
